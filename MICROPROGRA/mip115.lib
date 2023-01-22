@@ -1,0 +1,78 @@
+;Macro de inicializacion de segmentos de datos y extra
+;MIP115----MICROPROGRAMACIÓN UES FMO
+iniseg macro
+        mov ax,datos
+        mov ds,ax
+        mov es,ax
+        endm
+; crea un segmento de pila con el tamaño que se especifique
+cpila macro tam
+		PILA SEGMENT STACK 'STACK'
+		DB tam DUP(?) 
+		PILA ENDS 
+		endm
+;Macro para finalzar el programa
+fin macro 
+	mov ax,4c00h
+	int 21h
+	endm
+;macro para esperar entrada de teclado	
+esperar MACRO
+    mov ah,08
+    int 21h
+	endm
+;macro para posicionar el cursor en una posicion X,Y	
+xycursor MACRO x y
+	mov ah,02
+	mov bh,0
+	mov dh,y
+	mov dl,x
+	int 10H
+	endm
+;macro para mostrar un cuadro de x color en una x area	
+CUADRO MACRO XI,YI,XF,YF,COLOR
+	mov ax,0600h	
+	mov bh,COLOR
+	mov bl,00H
+	mov ch,YI
+	mov CL,XI
+	mov dh,YF
+	mov dl,XF
+	int 10h
+	endm
+;cuadros rapidos 2x2
+bloque macro xi,xf,y1,y2,color
+	mov ax,0600h	
+	mov bh,color
+	mov bl,00H
+	mov ch,y1
+	mov CL,xi
+	mov dh,y1
+	mov dl,xf
+	int 10h
+	mov ch,y2
+	mov CL,xi
+	mov dh,y2
+	mov dl,xf
+	int 10h
+	endm
+;Macro para limpiar pantalla llamado clearS de clear screen limpiar pantalla
+clearS MACRO    
+	mov ah,06   ;funcion para mover pantalla hacia arriba
+	mov al,0     ;se selecciona que el area es toda la pantalla
+	mov bh,00001111b  ;se pone el color por default de la consola fondo negro y texto blanco
+	mov cx,0000H  ;desde fila 00 y columna 00   
+    mov dx,184FH  ;hasta fila 25 y columna 80 
+	int 10h       ;se ejecuta la interrupcion que mueve la pantalla hacia arriba
+	mov ah,02 ;funcion para reestablecer la posicion del puntero
+	mov bh,0  ;en la pagina 0 osea el inicio
+	mov dh,0  ;en la fila 0
+	mov dl,0  ;y columna 0
+	int 10H   ;se ejecuta la interrupcion 10h para reestablecer el cursor
+	endm
+;Macro de impresion de una cadena
+imprime macro messg
+        mov ah,09
+        mov dx,offset messg
+        int 21h
+        endm	

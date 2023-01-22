@@ -1,0 +1,11 @@
+usuario: 12345
+contraseña 1: MIP
+contraseña 2:ARM
+contraseña 3:ues
+contraseña3 encriptado: 006638be37c0219fe917bfaaa63dcf5942500b051ad4cd5c53e042eaed746d03
+
+
+
+
+  
+

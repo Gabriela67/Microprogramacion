@@ -1,0 +1,30 @@
+____________________________________________________________________
+|                            BIENVENIDOS                           |
+|                                                                  |
+|------------------------------------------------------------------|
+|------------------------INSTRUCCIONES DEL JUEGO-------------------|
+|------------------------------------------------------------------|
+|                                                                  |             
+|                                                                  |
+|__________________________________________________________________|
+| se mostrara el menu principal de donde el usurio podra elegir    |
+| las opciones                                                     |
+| 1-ver instrucciones                                              | 
+| 2-jugar                                                          |
+| 3-ver puntaje maximo                                             |
+| 4-ver datos del programador                                      | 
+| 5-salir                                                          |
+|__________________________________________________________________|
+|                     para jugar                                   |
+|presione la tecla "a" para mover ala izquierda                    |
+|presione la tecla "d" para mover ala derecha                      |
+|presione la tecla "g" para cambiar la figura del jugador          |
+|presione la tecla "h" para pausar el juego                        |
+|presione la barra espaciadora para poder tirar balas al enmigo    |
+|el objetivo del  juego sera colicionar con el enemigo             |
+|primeramente el jugador contara con 3 vidas                       |
+|luego el enemigo aparecera en forma horizontal y se desplazara    |
+|tu objetivo sera presinar la barra espaciadora en el momento      |
+|para soltar la bala y que colisione con el enemigo                |
+|al colisionar con el enemigo se sumara un punto al puntale        |
+|__________________________________________________________________|

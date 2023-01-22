@@ -1,0 +1,266 @@
+;----------------------------------------------------------------------------
+;--------------------------SEMENTO DE DATOS-------------------------
+
+explosionBandera2		BYTE	0                              ;indica si hubo un impacto entre el enemigo
+enemigoInit1X			BYTE	4                              ;posicion inicial en x en 0
+enemigoInit1Y		    BYTE	5                              ;posicion inicial en y en 5
+enemigo1X				BYTE	4                      ;posicion en la que se va avanzando en X
+enemigo1Y				BYTE	7                      ;posicion en la que se va avanzando en Y
+limiteenemigoGolpeadoBandera1	BYTE 	0                ;establece cuando el enemigo es impactado o no con la bala
+
+
+
+;----------------orden llamar funciones 
+
+         call ManejadorEventosTecla	                            ;Primero se escuchan las teclas
+	call LimpiaJugadorViejaPos                              ;Se limpian posiciones viejas del jugador
+	call LimpiarBalaViejaPos                                ;Se limpia las posiciones vieja de las balas
+	call BorrarEnemigo                                      ;
+	call limpiarExplosion
+	call BorrarEnemigo1                                      ;;
+	call limpiarExplosion1          
+	call veriGolpebalaEnemigo                               ;verifica si hay colision entre la bala y el enemigo
+	call actualizarEnemigo; 
+	call veriGolpebalaEnemigo1                               ;verifica si hay colision entre la bala y el enemigo;
+	call actualizarEnemigo1; 
+	                              ;verifica si hay colision entre la bala y el enemigo
+	
+	call MostrarJugadorPrincipal                            ;muestra al jugador
+	call mostrarEnemigo                                     ;muestra al enemigo
+	call mostrarEnemigo1                                    ;muestra al enemigo
+	                                 
+	call MostrarBala                                        ;muestra la bala
+	call mostrarExplosion                                   ;muestra una explosión para el enemigo
+	call mostrarExplosion1                                   ;muestra una explosión para el enemigo
+	                                 ;muestra una explosión para el enemigo
+	call mostrarVida                                        ;muestra la vida que tiene disponible el jugador
+	                                        ;muestra la vida que tiene disponible el jugador
+	call mostrarPuntaje                                   	;presenta el puntaje
+	call verificarVida
+
+
+
+;----------------------semegnto de codigo
+
+;;;;;;______________________________________________
+;_________ENEMIGO2______________________
+limpiarExplosion1 PROC USES eax edx                             ;;;;PROCESO DE LIMPIAREXPLOSIOC
+	cmp explosionBandera1, 2                                    ;;;;;COMPARA SI LA EXPLOSION TIENE UN VALOR SI NO ES ASI 
+	jne nadaquelimpiar                                         ;;;;;NO LIMPIA LAEXPLOSION YA QUE SI NO SE PUDO DAR EL IMPACTO NO HUBO DICHA EXPLOSION
+	
+	mov eax, fondoColor                                        ;;;;;;;ESTABLECE EL COLOR DEL FONDO 
+	call SetTextColor                                          ;;;;;;MANDA A LLAMAR LA VARIABLE PARA ESTABLECER EL COLOR DEL FONDO
+	
+	;restablecer particula Izquierda-superior  
+	mov ah, particulaY                                         ;;;;;SE POSICIONA EN LA POSICION PARA ESTABLECER LA PARTICULA
+	sub ah,1                                                   ;;;SE LE RESTA EL VALOR DE 1 A LA
+	mov dh, ah                                                 ;;;;;;SE POSICIONA EEL REGISTRO A O SE MUEVE AL REGISTRO DH
+	mov al, particulaX                                         ;;;;;;;; AL REALIZARSE LA PARTICULA EL VALOR DE ESTA SE PASA AL REGSITRO AL
+	sub al, 1                                                  ;;;;SE LE RESTA UNA UNIDAD
+	mov dl, al                                                 ;;;;;;; SE TRANSFIERE EL VALOR DEL REGSITRO AL AL D=RESGISTRO LO QUE HACE RESTABLECER
+	call Gotoxy                                                ;;;;MUESTRA LAS COORDENADAS DE LAS PARTICULAS EN X Y EN Y
+	mov edx, offset particulareseteasimbolo1                    ;;;;;se le pasa el numero de posiciones sumadas a la variable particularesetsimbolo
+	call WriteString                                           ;;;;muestra un conjunto de carcateres en la panatalla
+	
+	;restablecer particula Izquierda-inferior 
+	mov ah, particulaY                                         ;;;;;SE POSICIONA EN LA POSICION PARA ESTABLECER LA PARTICULA
+	add ah, 1                                                  ;;;;;se le suma o agrega un el valor de 1 
+	mov dh, ah                                                 ;;;;;;;se le pasa el valor de ah al regsitro dh el cual es el valor de la particula y ya que este nos rive para establecer posiciones en Y
+	mov al, particulaX                                         ;;;;;;;luego se le pasa el valor del particulax al registro a por lo cual se le 
+	sub al, 1                                                  ;;;;;le resta el valor de 1
+	mov dl, al                                                 ;;;;;;se le pasa el valor del resgsitro al cual se le ha restado una unidad y este seria el que nos permite establecer las coordenadas en x
+	call Gotoxy                                                ;;;;MUESTRA LAS COORDENADAS DE LAS PARTICULAS EN X Y EN Y
+	mov edx, offset particulareseteasimbolo1                    ;;;;;se le pasa el numero de posiciones sumadas a la variable particularesetsimbolo
+	call WriteString                                           ;;;;muestra un conjunto de caracteres en pantalla
+	
+
+	;restablecer particula derecha inferior
+	mov ah, particulaY                                       ;;;;;SE POSICIONA EN LA POSICION PARA ESTABLECER LA PARTICULA
+	add ah, 1                                                ;;;;;se le suma o agrega un el valor de 1 
+	mov dh, ah                                               ;;;;;;;se le pasa el valor de ah al regsitro dh el cual es el valor de la particula y ya que este nos rive para establecer posiciones en Y
+	mov al, particulaX                                       ;;;;;;;luego se le pasa el valor del particulax al registro a por lo cual se le 
+	add al, 1                                                ;;;;;le resta el valor de 1
+	mov dl, al                                               ;;;;;;se le pasa el valor del resgsitro al cual se le ha restado una unidad y este seria el que nos permite establecer las coordenadas en x
+	call Gotoxy                                              ;;;;MUESTRA LAS COORDENADAS DE LAS PARTICULAS EN X Y EN Y
+	mov edx, offset particulareseteasimbolo1                  ;;;;;se le pasa el numero de posiciones sumadas a la variable particularesetsimbolo
+	call WriteString                                         ;;;;muestra un conjunto de caracteres en pantalla
+	
+	;; restablecer la partícula derecha superior
+	mov ah, particulaY                                       ;;;;;SE POSICIONA EN LA POSICION PARA ESTABLECER LA PARTICULA
+	sub ah, 1                                                ;;;;;se le resta o agrega un el valor de 1 
+	mov dh, ah                                               ;;;;;;;se le pasa el valor de ah al regsitro dh el cual es el valor de la particula y ya que este nos rive para establecer posiciones en Y
+	mov al, particulaX                                       ;;;;;;;luego se le pasa el valor del particulax al registro a por lo cual se le 
+	add al, 1                                                ;;;;suma el valor de 1
+	mov dl, al                                               ;;;;;;se le pasa el valor del registro al cual se le ha sumado una unidad y este seria el que nos permite establecer las coordenadas en x
+	call Gotoxy                                              ;;;;;se le pasa el numero de posiciones sumadas a la variable particularesetsimbolo
+	mov edx, offset particulareseteasimbolo1                  ;;;;;se le pasa el numero de posiciones sumadas a la variable particularesetsimbolo
+	call WriteString                                         ;;;;muestra un conjunto de caracteres en pantalla
+	
+	
+	mov explosionBandera1, 0                                  ;;;;;;;;;;;se vuene el valor de cero a la explosion la que desactiva la explosion
+	
+nadaquelimpiar:	                                             ;;;;se pasa a la etiqueta nada que limpiar 
+	ret                                                      ;;;;;;vuelve al procedimiento principal
+limpiarExplosion1 ENDP                                        ;;;;finaliza el procedimiento limpiar explosion
+
+veriGolpebalaEnemigo1 PROC USES eax
+	;Si (enemigoY == BalaY) y (enemigoX <= BalaX <= enemigoX+4) 
+	;entonces explosionBandera = 1
+	;delo contrario no cambiar
+
+	mov al, enemigo1Y                             ;;;;cordenada enemigoY al registro al
+	cmp BalaY, al                                ;;;para comparar con el registro
+	jne nocambiar                                ;;;;;; si son iguales 
+	mov al, enemigo1X                             ;;;;verifica si la posicion de la bala es la misma que el enemigo x si no es igual se pasaria a no cambiar
+	cmp BalaX, al                                ;;;;;compara si la bala es igual a al el cual seria donde se posiciona o se movio el enemigo
+	jb nocambiar                                 ;;;;;si la bala no tiene la misma posicion del enemigo se pasa a nocambiar
+	add al, TamanioEnemigo                       ;;;;a la posicion del enemigo se le suma 4 unidades
+	cmp BalaX, al                                ;;;;;compara si la bala es igual a al el cual seria donde se posiciona o se movio el enemigo
+	ja nocambiar                                 ;;;;;si la bala no tiene la misma posicion del enemigo se pasa a nocambiar
+	mov explosionBandera, 1                      ;;;;;;se le transfiere el valor o se mueve un aunidad a la funcion explosionBandera
+	add enemigoColorFondo, 16                    ;;;;se le cambian los colores al enemigo
+	
+nocambiar:
+	ret
+veriGolpebalaEnemigo1 ENDP
+
+
+
+mostrarExplosion1 PROC USES eax edx                ;;;;;PROCESO PARA MOSTRAR EXPLOSION
+	cmp explosionBandera1, 0                       ;;;compara si explosion bandera es cero
+	je	noexplosion
+	
+	xor eax, eax                                 ;;;;;  ;;;;;;;hacemos un xor del registro eax lo que dara como resultado colacar ese registro en 0  
+	mov al, explosionBackColor                   ;;;;;se le pasa un color
+	mov dl, ColorFrenteMascara                   ;;;;;se le mueven o se mueve el valor de colorfrentemascara a la explosion
+	and explosionColorFrente, dl                 ;;;;;Realiza la conjunción de los operandos bit por bit. Con esta instrucción se lleva a cabo la operación "y" lógica de los dos operandos: Fuente Destino | Destino.
+	add al, explosionColorFrente                 ;;;;;;por lo que se le suma el valor o se le adiciona el valor de explosionColorFrente a al
+	call SetTextColor                            ;;;;se llama la funcion la que hace posible poder establecer los colores
+	
+	
+	                                              ;;;;particula X/Y son usados en LimpiarExplosion
+	mov ah, BalaY                                 ;;;;SE POSICIONA EN LA POSICION DE LA BALA PARA GENERAR LAS PARTICULAS
+	mov particulaY, ah                            ;;;;se pasa a la variable
+	mov al, BalaX                                 ;;;;se mueve el registro al
+	mov particulaX, al                            ;;;estas variable se estian utilizando posteriormente
+
+	;dibujar particulas izquierda superior
+	mov ah, BalaY                                 ;;;SE TOMA LA POSICION DE LA BALA
+	sub ah, 1                                     ;;;SE LE RESTA UNA UNIIDAD
+	mov dh, ah                                    ;;;;SE TOMA EL VALOR DE DH Y SE PASA EL DEL REGISTRO AH YA QUE SE LE HA RESTADO UN VALOR
+	mov al, BalaX                                 ;;;;DESDE EL RESGITRO AL SE MUEVE O ALMACENA EL VALOR DE LA BALAY
+	sub al, 1                                     ;;;;;SE LE RESTA EL VALOR DE 1
+	mov dl, al                                    ;;;;SE TOMA O SE MUEVE EL REGISTRO DL Y SE TOMA EL DE AL YA QUE A ESTE SE LE A RESTADO EL VALOR 1 OSE GUARDA EL VALOR DE AL EN REGISTRO DL
+	call Gotoxy                                   ;;;;MUESTRA 
+	mov edx, offset particulaSimbolo1              ;;;;;;; 
+	call WriteString                              ;;;;;;;LLAMA LA FUNCION que muestra en pantalla
+	
+	
+	;dibujar izquierda-inferior particula        
+	mov ah, BalaY                               ;;;;;;;SE MUESTRA O MUEVE O TRANSFIERE EL VALOR DE BALA AL REGISTRO AH
+	add ah, 1                                   ;;;;;;; SE LE SUMA EL VALOR DE 1 AL REGISTRO AH
+	mov dh, ah                                  ;;;;SE TRANSFIERE O MUEVE EL VALOR DE AH AL RESGISTRO AH
+	mov al, BalaX                               ;;;;;SE MUEVE AL RESGITRO AL EL VALOR DE LA BALAX
+	sub al, 1                                   ;;;;;LUEGO SE LE RESTA UNA UNIDAD
+	mov dl, al                                  ;;;;;se mueve al resgistro dl el valor de al
+	call Gotoxy                                 ;;;;;muestra las coordenadas en donde se encuentra la bala
+	mov edx, offset particulaSimbolo1            ;;;;;se le pasa el numero de posiciones sumadas a la variable particulasimbolo
+	call WriteString                            ;;;;muestra en pantalla
+	
+
+	;dibujar particula en derecha-inferior
+	mov ah, BalaY                              ;;;;;;;mueve en el regsitro ah el valor de la variable BalaY
+	add ah, 1                                  ;;;;;se le suma una unidad al resgitro ah
+	mov dh, ah                                 ;;;;; pori lo cual se transfiere el valor al resgistro dh
+	mov al, BalaX                              ;;;;;;;el valor de balax se mueve al rsgitro al
+	add al, 1                                  ;;;;se le suma el valor de 1 al a la balax
+	mov dl, al                                 ;;;; se les transfiere al registro dl el valor de al
+	call Gotoxy                                ;;;;;;;muestra posiciones de la bala o donde se encuentra la bala
+	mov edx, offset particulaSimbolo1           ;;;;;se le pasa el numero de posiciones sumadas a la variable particulasimbolo 
+	call WriteString                           ;;;;;;;;muestra en pantalla
+	
+
+	;dibujar derecha superior particula
+	mov ah, BalaY                              ;;;;;;;;mueve en el resgitro ah el valor de la variable balaY
+	sub ah, 1                                  ;;;;;se le resta el valor de 1 a ah
+	mov dh, ah                                 ;;;;se transfiere el valor del resgistro ah a dh
+	mov al, BalaX                              ;;;;;;; se mueve el valor de BalaX
+	add al, 1                                  ;;;;;;se le resta la unidad a Balax
+	mov dl, al                                 ;;;;;;;trasnfiere o mueve el valor del resgitro al al resgitro dl
+	call Gotoxy                                ;;;;;;;;muestra posiciones de la bala o donde se encuentra la bala
+	mov edx, offset particulaSimbolo1           ;;;;;se le pasa el numero de posiciones sumadas a la variable particulasimbolo
+	call WriteString                           ;;;;;;;;muestra en pantalla
+	
+	; resetear posicion de bala
+	mov BalaY, 0                              ;;;;; resea la posicion en la coordenada y
+	mov BalaX, 0                               ;;;;;;resetea la posicion de la bala en la coordenada X
+INVOKE PlaySound, OFFSET sonidoconectar, NULL, SND_ALIAS
+INVOKE PlaySound, OFFSET archivo_audio1, NULL, SND_FILENAME; 
+
+noexplosion:                                   ;;;;;si no ay contacto con la bala y el enemigo no ay explosion
+	ret                                        ;;;;;;y vuelve al procediento principal
+mostrarExplosion1 ENDP                          ;;;;;;finaliza el proceso de mostrar explosion 
+
+mostrarEnemigo1 PROC USES eax edx               ;;;;;;;;;procedimiento para mostrar enemigo     
+	xor eax, eax                               ;;;;;;;hacemos un xor del registro eax lo que dara como resultado colacar ese registro en 0   
+	mov al, enemigoColorFondo; 1110*           ;;;;;;;;;;movemos el registro al a la parte baja lo que tiene enemigocolorfondo 
+                          	;yellow*16=11100000
+	mov dl, ColorFrenteMascara ;dl=0F          ;;;;;;;; ; movemos al registro dl el color frente mascara 0Fh va a hacer el color del texto
+	and enemigoColorFrente, dl;                ;;;;;05h and 0F
+	add al, enemigoColorFrente                 ;;;;;;; implementamos el operador and para aplicarlo al  enemigocolorfrente con el registro dl , esto por si queremos cambiar el jugador se pueda hacer atraves de las variables 
+	call SetTextColor                          ;;;;;;se establece el color por eso se llama la funcion ya que nos sirve para establecer el color
+	mov dh, enemigo1Y                           ;;;;;;;;para guardar las coordenadas en y 
+	mov dl, enemigo1X                           ;;;;de=l para guardar las coordenadas en x
+	call Gotoxy                                ;;;;;;coloca el cursor y muestra los caracteres
+	mov edx, offset simboloEnemigo            ;;;;;;offset para mostrar la cadenas de texto
+	call WriteString                           ;;;;muestra en panatla
+	ret                                        ;;;;;;;;;;vuelve al proceso principal
+mostrarEnemigo1 ENDP                            ;;;;;;finaliza proceso de mostrarEnemigo
+
+
+actualizarEnemigo1 PROC USES eax               ;;;;;;;proceso para actualizar enemigo
+	cmp explosionBandera, 1                   ;;;;compara si explosion bandera es igual a 1
+	je resetPosicionEnemigo1                  ;;;;; si es asi se pasa a la variable resetPosicionEnemigo
+	mov al, pantallaLimiteDerecho             ;;;;;; al llegar al limite derecho vuelve a comenzar por lo cual se mueve el valor de la variable al regsitro al
+	sub al, TamanioEnemigo                   ;;;;;;;;se le resta 
+	cmp enemigo1X, al                          ;;;;;;compara el resgistro al con enemigox
+	je limiteenemigoGolpeado1                  ;;;;;; si entonces pasa a enemigoGolpeado
+
+	inc enemigo1X                              ;; se incializa enemigoX
+	jmp continue                              ;;;continua el juego
+	
+limiteenemigoGolpeado1:                        ;;;;funcion limiteenemigoGolpeado
+	mov limiteenemigoGolpeadoBandera1, 1       ;;;;;;;mueve el limieteenemigogolpeadobandera como 1 ya que si se a golpeado se le suma un punto al jugador
+	
+resetPosicionEnemigo1:                         ;;;;funcion 
+	call BorrarEnemigoLine1                    ;;;;;;llama la funcion BorrarEnemigoLine la cual es para que el enemigo 
+	mov al, enemigoInit1X                      ;;;;;vuelva a comenzar desde el principio
+	mov enemigo1X, al                          ;;;;;;
+	
+continue:                                     ;;;;;si no es golpeado continua el enemigo desde el principio
+	ret                                       ;;;;; si no vuelve al proceso principal
+actualizarEnemigo1 ENDP                        ;;;;;finaliza el proceso actualizarEnemigo
+
+
+BorrarEnemigo1 PROC USES eax edx             ;;;;;para eliminar el rastro de las posiciones anteriores del enemigo
+	mov eax, fondoColor                     ;;;color en el regsitro aex el color de fondo
+	call SetTextColor                       ;;;;se establece el color de fondo
+	mov dh, enemigo1Y                        ;;;;;se establecen las posiciones en las que se ha encontrado el enemigo
+	mov dl, enemigo1X
+	call Gotoxy                             ;;;;se situara el cursor para que en esa se muestren espacios vacios
+	mov edx, offset enemigoResetSimbolo
+	call WriteString                        ;;;;A LLAMAR LA FUNCION WRITESTRING LA QUE CONVIERTE EN DECIMAL
+	ret                                     ;;;;luego regrasa al procedimeinto principal
+BorrarEnemigo1 ENDP                          ;;;;;
+
+BorrarEnemigoLine1 PROC USES eax edx         ;;;;;PROCESO PARA BORRARENEMIGOLINE
+	mov eax, fondoColor                     ;;;;establece colorese que tendra el texto
+	call SetTextColor                       ;;;;FUNCION QUE ESTABLECE COLOR
+	mov dh, enemigo1Y                        ;;;;PROPORCIONA POSICIONES A ENEMIGO
+	mov dl, 4                               ;;;posicion y sera la misma que tiene el enemigo
+	call Gotoxy                             
+	mov edx, offset enemigoLineaReset1   ;;;;se manda a mostrar las 80 lineas lo cual hace es borrar la linea donde estaba el enemigo
+	call WriteString                        ;;;;CONVIETTE EN DECIMAL
+	ret                                     ;;;;VUELVE AL PROCEDIMIENTO PRINCIPAL
+BorrarEnemigoLine1 ENDP                      ;;;FINALIZA PROCESO BORRARENEMIGOLINE
+
